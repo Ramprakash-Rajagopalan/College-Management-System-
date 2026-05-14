@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses - College Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #2a5298; color: white; }
+        button { padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 20px; }
+        form input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <nav>
+        <h2>🎓 College Management System</h2>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/courses">Courses</a>
+            <a href="/login-page">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>📚 Course Management</h2>
+
+        <button onclick="openCourseModal()">➕ Add Course</button>
+
+        <table id="courseTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Credits</th>
+                    <th>Semester</th>
+                    <th>Capacity</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="courseBody">
+                <tr><td colspan="7" style="text-align:center;">Loading...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="courseModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:200; justify-content:center; align-items:center;">
+        <div style="background:white; padding:30px; border-radius:10px; width:90%; max-width:500px;">
+            <h3>Add Course</h3>
+            <form id="courseForm">
+                <input type="text" placeholder="Course Code" required>
+                <input type="text" placeholder="Course Name" required>
+                <input type="number" placeholder="Credits" required>
+                <input type="number" placeholder="Semester" required>
+                <input type="number" placeholder="Capacity" required>
+                <button type="submit">Add Course</button>
+            </form>
+            <button onclick="closeCourseModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        async function loadCourses() {
+            try {
+                const response = await fetch('/api/courses');
+                const courses = await response.json();
+                
+                const tbody = document.getElementById('courseBody');
+                tbody.innerHTML = '';
+                
+                courses.forEach(c => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${c.id}</td>
+                        <td>${c.code}</td>
+                        <td>${c.name}</td>
+                        <td>${c.credits}</td>
+                        <td>${c.semester}</td>
+                        <td>${c.capacity}</td>
+                        <td>
+                            <button class="btn-edit">Edit</button>
+                            <button class="btn-delete">Delete</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading courses:', error);
+            }
+        }
+
+        function openCourseModal() {
+            document.getElementById('courseModal').style.display = 'flex';
+        }
+
+        function closeCourseModal() {
+            document.getElementById('courseModal').style.display = 'none';
+        }
+
+        loadCourses();
+    </script>
+</body>
+</html>

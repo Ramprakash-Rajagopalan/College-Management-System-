@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marks & Results - College Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #2a5298; color: white; }
+        button { padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 20px; }
+        form input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
+        .grade-a { background: #d4edda; padding: 5px 10px; border-radius: 3px; }
+        .grade-b { background: #fff3cd; padding: 5px 10px; border-radius: 3px; }
+        .grade-c { background: #f8d7da; padding: 5px 10px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <nav>
+        <h2>🎓 College Management System</h2>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/marks">Marks</a>
+            <a href="/login-page">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>📈 Marks & Results Management</h2>
+
+        <button onclick="openMarksModal()">➕ Add Marks</button>
+
+        <table id="marksTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Student ID</th>
+                    <th>Course ID</th>
+                    <th>Exam Type</th>
+                    <th>Marks</th>
+                    <th>Percentage</th>
+                    <th>Grade</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="marksBody">
+                <tr><td colspan="8" style="text-align:center;">Loading...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="marksModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:200; justify-content:center; align-items:center;">
+        <div style="background:white; padding:30px; border-radius:10px; width:90%; max-width:500px;">
+            <h3>Add Marks</h3>
+            <form id="marksForm">
+                <input type="number" placeholder="Student ID" required>
+                <input type="number" placeholder="Course ID" required>
+                <input type="text" placeholder="Exam Type" required>
+                <input type="number" placeholder="Marks Obtained" step="0.01" required>
+                <input type="number" placeholder="Total Marks" step="0.01" required>
+                <button type="submit">Add Marks</button>
+            </form>
+            <button onclick="closeMarksModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        async function loadMarks() {
+            try {
+                const response = await fetch('/api/marks');
+                const marks = await response.json();
+                
+                const tbody = document.getElementById('marksBody');
+                tbody.innerHTML = '';
+                
+                marks.forEach(m => {
+                    const row = document.createElement('tr');
+                    let gradeClass = 'grade-a';
+                    if (m.percentage < 60) gradeClass = 'grade-c';
+                    else if (m.percentage < 75) gradeClass = 'grade-b';
+                    
+                    row.innerHTML = `
+                        <td>${m.id}</td>
+                        <td>${m.student_id}</td>
+                        <td>${m.course_id}</td>
+                        <td>${m.exam_type}</td>
+                        <td>${m.marks_obtained}/${m.total_marks}</td>
+                        <td>${m.percentage}%</td>
+                        <td><span class="${gradeClass}">${m.grade}</span></td>
+                        <td>
+                            <button class="btn-edit">Edit</button>
+                            <button class="btn-delete">Delete</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading marks:', error);
+            }
+        }
+
+        function openMarksModal() {
+            document.getElementById('marksModal').style.display = 'flex';
+        }
+
+        function closeMarksModal() {
+            document.getElementById('marksModal').style.display = 'none';
+        }
+
+        loadMarks();
+    </script>
+</body>
+</html>

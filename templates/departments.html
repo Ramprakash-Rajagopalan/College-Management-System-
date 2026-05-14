@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Departments - College Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #2a5298; color: white; }
+        button { padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 20px; }
+        form input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <nav>
+        <h2>🎓 College Management System</h2>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/departments">Departments</a>
+            <a href="/login-page">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>🏢 Department Management</h2>
+
+        <button onclick="openDeptModal()">➕ Add Department</button>
+
+        <table id="deptTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Code</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="deptBody">
+                <tr><td colspan="4" style="text-align:center;">Loading...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="deptModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:200; justify-content:center; align-items:center;">
+        <div style="background:white; padding:30px; border-radius:10px; width:90%; max-width:400px;">
+            <h3>Add Department</h3>
+            <form id="deptForm">
+                <input type="text" placeholder="Department Name" required>
+                <input type="text" placeholder="Department Code" required>
+                <button type="submit">Add Department</button>
+            </form>
+            <button onclick="closeDeptModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        async function loadDepartments() {
+            try {
+                const response = await fetch('/api/departments');
+                const depts = await response.json();
+                
+                const tbody = document.getElementById('deptBody');
+                tbody.innerHTML = '';
+                
+                depts.forEach(d => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${d.id}</td>
+                        <td>${d.name}</td>
+                        <td>${d.code}</td>
+                        <td>
+                            <button class="btn-edit">Edit</button>
+                            <button class="btn-delete">Delete</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading departments:', error);
+            }
+        }
+
+        function openDeptModal() {
+            document.getElementById('deptModal').style.display = 'flex';
+        }
+
+        function closeDeptModal() {
+            document.getElementById('deptModal').style.display = 'none';
+        }
+
+        loadDepartments();
+    </script>
+</body>
+</html>
