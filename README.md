@@ -10,9 +10,7 @@ A comprehensive web-based college management system built with Flask and MySQL. 
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Database Setup](#database-setup)
-- [Configuration](#configuration)
 - [Running the Application](#running-the-application)
-- [API Endpoints](#api-endpoints)
 - [User Roles](#user-roles)
 - [Features Overview](#features-overview)
 - [Contributing](#contributing)
@@ -155,21 +153,6 @@ You should see the following tables:
 - marks
 - timetable
 
-## ⚙️ Configuration
-
-Update the database configuration in `backend/config.py`:
-
-```python
-DB_CONFIG = {
-    'host': 'localhost',      # Your MySQL host
-    'user': 'root',           # Your MySQL username
-    'password': '282004',     # Your MySQL password
-    'database': 'college_management'
-}
-
-DEBUG = True  # Set to False in production
-```
-
 ## ▶️ Running the Application
 
 ### 1. Navigate to Backend Directory
@@ -193,56 +176,7 @@ Open your web browser and navigate to:
 http://localhost:5000
 ```
 
-## 📡 API Endpoints
-
-### Authentication
-- `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - User logout
-
-### Students
-- `GET /api/students` - Get all students
-- `POST /api/students` - Create new student
-- `GET /api/students/<id>` - Get student details
-- `PUT /api/students/<id>` - Update student
-- `DELETE /api/students/<id>` - Delete student
-
-### Faculty
-- `GET /api/faculty` - Get all faculty
-- `POST /api/faculty` - Create new faculty
-- `GET /api/faculty/<id>` - Get faculty details
-- `PUT /api/faculty/<id>` - Update faculty
-- `DELETE /api/faculty/<id>` - Delete faculty
-
-### Departments
-- `GET /api/departments` - Get all departments
-- `POST /api/departments` - Create department
-- `GET /api/departments/<id>` - Get department details
-- `PUT /api/departments/<id>` - Update department
-- `DELETE /api/departments/<id>` - Delete department
-
-### Courses
-- `GET /api/courses` - Get all courses
-- `POST /api/courses` - Create course
-- `GET /api/courses/<id>` - Get course details
-- `PUT /api/courses/<id>` - Update course
-- `DELETE /api/courses/<id>` - Delete course
-
-### Attendance
-- `GET /api/attendance` - Get attendance records
-- `POST /api/attendance` - Record attendance
-- `PUT /api/attendance/<id>` - Update attendance
-
-### Marks
-- `GET /api/marks` - Get marks records
-- `POST /api/marks` - Record marks
-- `PUT /api/marks/<id>` - Update marks
-
-### Timetable
-- `GET /api/timetable` - Get timetable
-- `POST /api/timetable` - Create timetable entry
-- `PUT /api/timetable/<id>` - Update timetable
-
-## 👥 User Roles
+##  User Roles
 
 ### 1. Admin
 - Full system access
